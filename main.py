@@ -28,7 +28,9 @@ def generate_report(pcap_file):
         details = err_for_llm.get('details', {})
         if 'raw_payload' in details and isinstance(details['raw_payload'], bytes):
             details['raw_payload'] = binascii.hexlify(details['raw_payload']).decode()
-        prompt = f"Analyze this TCP error: {json.dumps(err_for_llm)}"
+        
+        # Enhanced LLM prompt
+        prompt = f"""You are a network engineer specializing in equity trading systems.\nAnalyze this packet summary for signs of TCP-level errors, session mismanagement,\nor malformed trading messages (e.g., FIX). Explain the anomalies, their likely causes,\nand provide recommended remediation steps.\n\nPacket Summary: {json.dumps(err_for_llm)}"""
         ai_insight = query_llm(prompt)
         err['llm_response'] = ai_insight
         full_report.append(err)
@@ -38,7 +40,8 @@ def generate_report(pcap_file):
     report_data = {
         'errors': full_report,
         'latencies': latencies,
-        'fix_messages': fix_msgs
+        'fix_messages': fix_msgs,
+        'total_packets': len(packets)
     }
     report_data = bytes_to_hex(report_data)
     with open(output_path, 'w') as f:
