@@ -1,0 +1,45 @@
+{
+  "errors": [
+    {
+      "type": "TCP Retransmission",
+      "details": {
+        "src_ip": "127.0.0.1",
+        "dst_ip": "127.0.0.1",
+        "src_port": 11001,
+        "dst_port": 53867,
+        "flags": "0x0018",
+        "seq": 253279,
+        "ack": 19240,
+        "payload_len": 441,
+        "header_len": 32,
+        "checksum": 65505,
+        "options": "01:01:08:0a:00:0b:43:59:00:0b:43:50",
+        "raw_payload": "383d464958542e312e3101393d3431370133353d380134393d544558315f444c440135363d444c445f5445580133343d3537310135323d32303135313132382d31373a35393a35302e3731340133373d6f726435300131313d6f72643530013435333d300131373d65786563353139013135303d300133393d310135353d424850013731313d33013331313d424c4148013837393d3837392e30013331313d464f4f013435373d32013435383d556e646572426c6168013435383d4f766572466f6f013331313d424f4f4d013838373d35013838383d5265766572657261013838383d4f726c616e6461013838383d57697468726f6f6e013838383d4c6f6e6777656564013838383d426c6563686e6f640135343d310133383d3939352e300134303d320134343d39382e31350135393d340133323d312e30013135313d302e300131343d3939352e3001363d39382e31350136303d32303135313132382d31373a35393a35302e3533380137383d310137393d4163636f756e7431013533393d31013532343d6e65737465647061727479494431013830343d31013534353d7375626e657374656470617274794944310131303d30333101",
+        "timestamp": 1448733590.743858
+      },
+      "llm_response": " This packet summary indicates a TCP retransmission error, which means that the sender sent an incomplete or corrupted data packet to the receiver and was forced to resend it. The possible causes of this error are network congestion, packet loss, or faulty devices. \nThe recommended remediation steps for this error are to monitor the traffic volume and quality, check the source and destination IP addresses and ports, and verify the checksum and header fields of the packets to ensure they match. If the problem persists, try switching to a different network or router, or using a different protocol or application to transfer the data.\n"
+    }
+  ],
+  "latencies": [
+    {
+      "session": [
+        "127.0.0.1",
+        53867,
+        "127.0.0.1",
+        11001
+      ],
+      "latency_ms": 32070.8429813385
+    },
+    {
+      "session": [
+        "127.0.0.1",
+        11001,
+        "127.0.0.1",
+        53867
+      ],
+      "latency_ms": 42231.90903663635
+    }
+  ],
+  "fix_messages": [],
+  "total_packets": 430
+}

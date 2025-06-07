@@ -43,7 +43,7 @@ containing Exchange Trading Data.
 
 Features:
 - TCP retransmission detection
-- Packet loss analysis (placeholder)
+- Packet loss analysis
 - Order latency measurement
 - Comprehensive reporting
 """)
@@ -138,18 +138,6 @@ if report_loaded:
         fig_latency = px.histogram(latencies_df, x='latency_ms', nbins=10, title='Latency Distribution (ms)', labels={'latency_ms': 'Latency (ms)'})
         st.plotly_chart(fig_latency)
 
-    # FIX Message Type Breakdown (requires 'MsgType' in decoded FIX messages)
-    fix_msgs_df = pd.DataFrame([msg for msg in report_data.get('fix_messages', []) if msg and not msg.get('error')]) # Filter out empty/error messages
-    if not fix_msgs_df.empty and '35' in fix_msgs_df.columns: # '35' is the MsgType tag in FIX
-        msg_type_counts = fix_msgs_df['35'].value_counts().reset_index()
-        msg_type_counts.columns = ['FIX Message Type', 'Count']
-        fig_fix_types = px.bar(msg_type_counts, x='FIX Message Type', y='Count', title='Distribution of FIX Message Types')
-        st.plotly_chart(fig_fix_types)
-    elif not fix_msgs_df.empty and '35' not in fix_msgs_df.columns:
-        st.info("FIX messages were decoded, but 'MsgType' (tag 35) was not found for visualization.")
-    else:
-        st.info("No valid FIX messages found for visualization.")
-
     st.header("📊 Detected Issues")
     if report_data.get('errors'):
         for i, err in enumerate(report_data['errors']):
@@ -174,17 +162,6 @@ if report_loaded:
                 st.markdown(f"**Latency:** {lat['latency_ms']:.2f} ms")
     else:
         st.info("No latency data available.")
-
-    st.header("📝 Decoded FIX Messages")
-    if report_data.get('fix_messages'):
-        for i, fix_msg in enumerate(report_data['fix_messages']):
-            if fix_msg and not fix_msg.get('error'):
-                with st.expander(f"FIX Message {i+1}: MsgType={fix_msg.get('35', 'N/A')}"):
-                    st.json(fix_msg)
-            elif fix_msg.get('error'):
-                st.warning(f"Error decoding FIX message {i+1}: {fix_msg['error']}")
-    else:
-        st.info("No FIX messages found or decoded.")
 
 # Clean up temp file if it was created
 if uploaded_file and file_to_analyze and os.path.exists(file_to_analyze) and file_to_analyze.startswith(tempfile.gettempdir()):
