@@ -3,6 +3,10 @@
 def decode_fix_message(payload_bytes):
     try:
         msg = payload_bytes.decode(errors='ignore')
+        # Basic check for FIX header: Tag 8 (BeginString) should be present at the start
+        if not msg.startswith("8=FIX."):
+            return None # Not a FIX message
+
         fields = msg.split('\x01')
         fix_dict = {}
         for field in fields:

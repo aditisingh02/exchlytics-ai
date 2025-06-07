@@ -20,16 +20,19 @@ def generate_report(pcap_file):
     errors = detect_errors(packets)
     latencies = calculate_latency(packets)
     fix_msgs = [decode_fix_message(pkt['raw_payload']) for pkt in packets if pkt['raw_payload']]
+    fix_msgs = [msg for msg in fix_msgs if msg is not None]
 
     full_report = []
     for err in errors:
-        # Make a copy and convert bytes to hex string for LLM prompt
         err_for_llm = copy.deepcopy(err)
-        details = err_for_llm.get('details', {})
-        if 'raw_payload' in details and isinstance(details['raw_payload'], bytes):
-            details['raw_payload'] = binascii.hexlify(details['raw_payload']).decode()
+        # Ensure all bytes objects within err_for_llm are converted for JSON serialization (for LLM prompt)
+        err_for_llm = bytes_to_hex(err_for_llm)
         
-        # Enhanced LLM prompt
+        # Original raw_payload conversion logic is now redundant due to bytes_to_hex, but keeping for clarity/safety if other byte types were added.
+        # details = err_for_llm.get('details', {})
+        # if 'raw_payload' in details and isinstance(details['raw_payload'], bytes):
+        #     details['raw_payload'] = binascii.hexlify(details['raw_payload']).decode()
+
         prompt = f"""You are a network engineer specializing in equity trading systems.\nAnalyze this packet summary for signs of TCP-level errors, session mismanagement,\nor malformed trading messages (e.g., FIX). Explain the anomalies, their likely causes,\nand provide recommended remediation steps.\n\nPacket Summary: {json.dumps(err_for_llm)}"""
         ai_insight = query_llm(prompt)
         err['llm_response'] = ai_insight

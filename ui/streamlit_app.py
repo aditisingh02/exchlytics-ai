@@ -84,13 +84,43 @@ elif not file_to_analyze:
 if report_loaded:
     total_packets = report_data.get('total_packets', 0)
     tcp_retransmissions_count = len([err for err in report_data.get('errors', []) if err['type'] == 'TCP Retransmission'])
-    # Placeholders for packet loss and order latency (actual calculation in latency_checker.py)
-    # You'd integrate more sophisticated logic here if packet_loss_info is to be derived
+    
+    # Basic Packet Loss indication (can be refined with more sophisticated logic)
+    packet_loss_info = f"{tcp_retransmissions_count} retransmissions detected (indicates potential loss)" if tcp_retransmissions_count > 0 else "No retransmissions detected"
 
-    st.markdown(f"**Total Packets:** {total_packets}")
-    st.markdown(f"**TCP Retransmissions:** {tcp_retransmissions_count}")
-    st.markdown(f"**Packet Loss:** {packet_loss_info}")
-    st.markdown(f"**Order Latency:** {order_latency_info}")
+    # Order Latency Display Refinement
+    all_latencies_ms = [lat['latency_ms'] for lat in report_data.get('latencies', []) if 'latency_ms' in lat]
+    if all_latencies_ms:
+        avg_latency = sum(all_latencies_ms) / len(all_latencies_ms)
+        min_latency = min(all_latencies_ms)
+        max_latency = max(all_latencies_ms)
+        order_latency_info = f"Avg: {avg_latency:.2f}ms, Min: {min_latency:.2f}ms, Max: {max_latency:.2f}ms"
+    else:
+        order_latency_info = "N/A"
+
+    col_stats1, col_stats2, col_stats3 = st.columns(3)
+    with col_stats1:
+        st.metric(label="Total Packets", value=total_packets)
+    with col_stats2:
+        st.metric(label="TCP Retransmissions", value=tcp_retransmissions_count)
+    with col_stats3:
+        st.metric(label="Packet Loss", value=tcp_retransmissions_count)
+        if tcp_retransmissions_count > 0:
+            st.markdown(f"{packet_loss_info.split(' ', 1)[1]}")
+        else:
+            st.markdown(f"{packet_loss_info}")
+
+    st.markdown("**Order Latency:**")
+    if all_latencies_ms:
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric(label="Average Latency", value=f"{avg_latency:.2f} ms")
+        with col2:
+            st.metric(label="Minimum Latency", value=f"{min_latency:.2f} ms")
+        with col3:
+            st.metric(label="Maximum Latency", value=f"{max_latency:.2f} ms")
+    else:
+        st.info("No order latency data available.")
 
     st.header("📈 Visual Insights")
 
@@ -109,7 +139,7 @@ if report_loaded:
         st.plotly_chart(fig_latency)
 
     # FIX Message Type Breakdown (requires 'MsgType' in decoded FIX messages)
-    fix_msgs_df = pd.DataFrame(report_data.get('fix_messages', []))
+    fix_msgs_df = pd.DataFrame([msg for msg in report_data.get('fix_messages', []) if msg and not msg.get('error')]) # Filter out empty/error messages
     if not fix_msgs_df.empty and '35' in fix_msgs_df.columns: # '35' is the MsgType tag in FIX
         msg_type_counts = fix_msgs_df['35'].value_counts().reset_index()
         msg_type_counts.columns = ['FIX Message Type', 'Count']
@@ -117,6 +147,8 @@ if report_loaded:
         st.plotly_chart(fig_fix_types)
     elif not fix_msgs_df.empty and '35' not in fix_msgs_df.columns:
         st.info("FIX messages were decoded, but 'MsgType' (tag 35) was not found for visualization.")
+    else:
+        st.info("No valid FIX messages found for visualization.")
 
     st.header("📊 Detected Issues")
     if report_data.get('errors'):
@@ -134,7 +166,12 @@ if report_loaded:
     st.header("⏱️ Latency Analysis")
     if report_data.get('latencies'):
         for i, lat in enumerate(report_data['latencies']):
-            st.write(f"Session {i+1}: {lat}")
+            with st.container(border=True): # Use st.container to create a visual card
+                session_key = lat['session']
+                # Format session key for better readability
+                formatted_session = f"{session_key[0]}:{session_key[1]} -> {session_key[2]}:{session_key[3]}"
+                st.markdown(f"**Session {i+1}:** {formatted_session}")
+                st.markdown(f"**Latency:** {lat['latency_ms']:.2f} ms")
     else:
         st.info("No latency data available.")
 
@@ -142,7 +179,8 @@ if report_loaded:
     if report_data.get('fix_messages'):
         for i, fix_msg in enumerate(report_data['fix_messages']):
             if fix_msg and not fix_msg.get('error'):
-                st.json(fix_msg)
+                with st.expander(f"FIX Message {i+1}: MsgType={fix_msg.get('35', 'N/A')}"):
+                    st.json(fix_msg)
             elif fix_msg.get('error'):
                 st.warning(f"Error decoding FIX message {i+1}: {fix_msg['error']}")
     else:
