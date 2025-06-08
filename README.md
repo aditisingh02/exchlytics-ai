@@ -1,4 +1,5 @@
 # Exchlytics AI: Intelligent PCAP Analysis for Trading Systems
+
 https://github.com/user-attachments/assets/c02f73e2-60e5-4da7-89b3-873b5688415e
 
 ## Overview
@@ -10,7 +11,6 @@ Exchlytics AI is a cutting-edge PCAP analysis tool specifically designed for fin
 ### Core Capabilities
 
 - AI-powered packet analysis using Microsoft's Phi model
-- Real-time trading metrics and statistics
 - Advanced anomaly detection
 - Interactive visualizations
 - Natural language interface
@@ -100,36 +100,6 @@ The application can be configured through:
 - `config.yaml` for general settings
 - Environment variables for sensitive data
 - UI settings for analysis parameters
-
-## Roadmap
-
-- [ ] Advanced trading protocol support
-- [ ] Machine learning models for prediction
-- [ ] Real-time monitoring capabilities
-- [ ] API integration
-- [ ] Automated remediation
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Microsoft for Azure AI and Phi model
-- The Scapy and PyShark communities
-- Streamlit for the amazing UI framework
-
-## Support
-
-For support, please:
-
-1. Check the [documentation](docs/)
-2. Open an issue
-3. Contact the maintainers
 
 ---
 
