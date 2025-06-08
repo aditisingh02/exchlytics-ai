@@ -41,8 +41,6 @@ A network packet capture (PCAP) analysis tool built with Python, focusing on net
 
 ## Future Enhancements
 
-### Short-term Goals
-
 - [ ] Implement packet filtering capabilities
 - [ ] Add basic traffic statistics
 - [ ] Create interactive visualizations
