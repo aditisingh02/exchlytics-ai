@@ -1,4 +1,5 @@
 # Exchlytics AI: Intelligent PCAP Analysis for Trading Systems
+https://github.com/user-attachments/assets/c02f73e2-60e5-4da7-89b3-873b5688415e
 
 ## Overview
 
