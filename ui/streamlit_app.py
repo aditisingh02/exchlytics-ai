@@ -12,13 +12,18 @@ import pandas as pd
 import plotly.express as px
 
 # --- UI Structure --- #
-st.set_page_config(layout="centered", page_title="PCAP Trading Data Analyzer")
+st.set_page_config(
+    layout="centered", 
+    page_title="Exchlytics AI",
+    page_icon="🪼"
+)
 
-st.title("PCAP Trading Data Analyzer")
-st.write("Analyze PCAP files containing Exchange Trading Data")
+st.title("Exchlytics AI")
+st.write("Intelligent PCAP Analysis for Trading Systems")
 
 # --- Sidebar for File Selection and Features --- #
-st.sidebar.title("File Selection")
+st.sidebar.title("Exchlytics AI")
+st.sidebar.markdown("---")
 
 # List available demo PCAP files
 demo_pcap_files = glob.glob("pcap_files/Demos/*.pcap")
@@ -38,14 +43,12 @@ elif uploaded_file:
         file_to_analyze = tmp_file.name
 
 st.sidebar.markdown("""
-This tool analyzes PCAP files
-containing Exchange Trading Data.
-
-Features:
-- TCP retransmission detection
-- Packet loss analysis
-- Order latency measurement
-- Comprehensive reporting
+### Features
+- 🤖 AI-Powered Analysis
+- 📊 Real-time Metrics
+- 🔍 Advanced Error Detection
+- ⚡ Latency Analysis
+- 📈 Trading Pattern Analysis
 """)
 
 # --- Main Content Area --- #
@@ -165,4 +168,13 @@ if report_loaded:
 
 # Clean up temp file if it was created
 if uploaded_file and file_to_analyze and os.path.exists(file_to_analyze) and file_to_analyze.startswith(tempfile.gettempdir()):
-    os.remove(file_to_analyze) 
+    os.remove(file_to_analyze)
+
+# Footer
+st.markdown("---")
+st.markdown("""
+    <div style='text-align: center'>
+        <p>Exchlytics AI - Where AI meets Trading Intelligence</p>
+        <p>Built with ❤️ by <a href='https://github.com/aditisingh02'>Aditi Singh</a></p>
+    </div>
+""", unsafe_allow_html=True) 
