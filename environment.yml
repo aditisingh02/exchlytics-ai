@@ -1,0 +1,17 @@
+name: pcap-analyzer-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+      - streamlit
+      - scapy
+      - pyshark
+      - requests
+      - tqdm
+      - pandas
+      - plotly
+      - azure-ai-ml
+      - azure-identity

@@ -1,0 +1,32 @@
+name: pcap-analyzer
+description: PCAP Trading Data Analyzer using Streamlit
+
+compute:
+  name: cpu-cluster
+  type: cpu
+
+environment:
+  name: pcap-analyzer-env
+  conda_file: environment.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+
+endpoint:
+  name: pcap-analyzer-endpoint
+  type: web
+  port: 8501
+
+deployment:
+  name: pcap-analyzer-deployment
+  model: null # No ML model needed for this application
+  code_configuration:
+    code: .
+    scoring_script: ui/streamlit_app.py
+  environment: pcap-analyzer-env
+  instance_type: Standard_DS3_v2
+  instance_count: 1
+  app_insights_enabled: true
+  request_settings:
+    max_concurrent_requests_per_instance: 1
+    request_timeout_ms: 90000
+  traffic_rules:
+    default: 100
