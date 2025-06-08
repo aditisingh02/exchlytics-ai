@@ -1,28 +1,29 @@
-# 🪼 Exchlytics AI: Intelligent PCAP Analysis for Trading Systems
+# Exchlytics AI: Intelligent PCAP Analysis for Trading Systems
 
-## 🌟 Overview
+## Overview
 
-Exchlytics AI is a cutting-edge PCAP analysis tool specifically designed for financial trading systems. It combines the power of AI with advanced packet analysis to provide insights into trading operations, latency issues, and system performance.
+Exchlytics AI is a cutting-edge PCAP analysis tool specifically designed for financial trading systems. It combines the power of AI with advanced packet analysis to provide real-time insights into trading operations, latency issues, and system performance.
 
-## 🚀 Features
+## Features
 
 ### Core Capabilities
 
-- 🤖 AI-powered packet analysis using Microsoft's Phi model
-- 🔍 Advanced anomaly detection
-- 📈 Interactive visualizations
-- 💬 Natural language interface
-- 📝 Automated report generation
+- AI-powered packet analysis using Microsoft's Phi model
+- Real-time trading metrics and statistics
+- Advanced anomaly detection
+- Interactive visualizations
+- Natural language interface
+- Automated report generation
 
 ### Trading-Specific Analysis
 
-- ⚡ Order execution latency tracking
-- 🚫 Rejection reason analysis
-- 🔄 Session stability monitoring
-- 📉 Performance bottleneck detection
-- 📈 Trading pattern analysis
+- Order execution latency tracking
+- Rejection reason analysis
+- Session stability monitoring
+- Performance bottleneck detection
+- Trading pattern analysis
 
-## 🛠️ Technical Stack
+## Technical Stack
 
 - **Frontend**: Streamlit
 - **Packet Analysis**: Scapy, PyShark
@@ -31,7 +32,7 @@ Exchlytics AI is a cutting-edge PCAP analysis tool specifically designed for fin
 - **Visualization**: Plotly
 - **Local AI**: Ollama
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -44,7 +45,7 @@ Exchlytics AI is a cutting-edge PCAP analysis tool specifically designed for fin
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/aditisingh02/exchlytics-ai.git
+git clone https://github.com/yourusername/exchlytics-ai.git
 cd exchlytics-ai
 ```
 
@@ -65,10 +66,10 @@ ollama pull phi:latest
 4. Run the application:
 
 ```bash
-streamlit run ui/streamlit_app.py
+streamlit run app.py
 ```
 
-## 📊 Usage
+## Usage
 
 ### Basic Analysis
 
@@ -83,7 +84,7 @@ streamlit run ui/streamlit_app.py
 - Export analysis results
 - Monitor real-time trading metrics
 
-## 🎯 Key Benefits
+## Key Benefits
 
 - 90% faster analysis time
 - Reduced manual intervention
@@ -91,7 +92,7 @@ streamlit run ui/streamlit_app.py
 - Enhanced compliance monitoring
 - Better risk management
 
-## 🔧 Configuration
+## Configuration
 
 The application can be configured through:
 
@@ -99,6 +100,36 @@ The application can be configured through:
 - Environment variables for sensitive data
 - UI settings for analysis parameters
 
+## Roadmap
+
+- [ ] Advanced trading protocol support
+- [ ] Machine learning models for prediction
+- [ ] Real-time monitoring capabilities
+- [ ] API integration
+- [ ] Automated remediation
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Microsoft for Azure AI and Phi model
+- The Scapy and PyShark communities
+- Streamlit for the amazing UI framework
+
+## Support
+
+For support, please:
+
+1. Check the [documentation](docs/)
+2. Open an issue
+3. Contact the maintainers
+
 ---
 
-_"Where AI meets Trading Intelligence"_ 🚀
+_"Where AI meets Trading Intelligence"_
