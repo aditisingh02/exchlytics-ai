@@ -67,7 +67,7 @@ ollama pull phi:latest
 4. Run the application:
 
 ```bash
-streamlit run app.py
+streamlit run ui/streamlit_app.py
 ```
 
 ## Usage
