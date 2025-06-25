@@ -6,6 +6,11 @@ https://github.com/user-attachments/assets/c02f73e2-60e5-4da7-89b3-873b5688415e
 
 Exchlytics AI is a cutting-edge PCAP analysis tool specifically designed for financial trading systems. It combines the power of AI with advanced packet analysis to provide real-time insights into trading operations, latency issues, and system performance.
 
+## 🏆 Awards
+
+**First Prize Winner** - Microsoft Code Without Barriers 2025 Hackathon  
+Barclays Problem Statement: "Reporting for PCAP Files Containing Exchange Trading Data"
+
 ## Features
 
 ### Core Capabilities
