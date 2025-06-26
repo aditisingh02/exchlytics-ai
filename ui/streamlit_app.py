@@ -7,9 +7,22 @@ from analyzer.error_detector import detect_errors
 from llm.ollama_client import query_llm
 import json, tempfile
 import glob
-from main import generate_report # Import the generate_report function
+from main import generate_report 
 import pandas as pd
 import plotly.express as px
+from pdf_report import create_pdf_report
+import base64
+from datetime import datetime
+
+# session state for PDF generation
+if 'pdf_generated' not in st.session_state:
+    st.session_state.pdf_generated = False
+if 'pdf_bytes' not in st.session_state:
+    st.session_state.pdf_bytes = None
+if 'pdf_filename' not in st.session_state:
+    st.session_state.pdf_filename = None
+if 'report_data' not in st.session_state:
+    st.session_state.report_data = None
 
 # --- UI Structure --- #
 st.set_page_config(
@@ -21,13 +34,11 @@ st.set_page_config(
 st.title("Exchlytics AI")
 st.write("Intelligent PCAP Analysis for Trading Systems")
 
-# --- Sidebar for File Selection and Features --- #
 st.sidebar.title("Exchlytics AI")
 st.sidebar.markdown("---")
 
-# List available demo PCAP files
 demo_pcap_files = glob.glob("pcap_files/Demos/*.pcap")
-# Prepend a default option
+
 demo_pcap_options = ["-- Select a demo PCAP --"] + sorted(demo_pcap_files)
 selected_demo_pcap = st.sidebar.selectbox("Select a demo PCAP File", demo_pcap_options)
 
@@ -63,7 +74,6 @@ order_latency_info = "N/A"
 report_loaded = False
 report_data = {}
 
-# Run Analysis button (or load report if already generated)
 if st.button("Run Analysis") and file_to_analyze:
     with st.spinner(f"Analyzing {os.path.basename(file_to_analyze)}..."):
         try:
@@ -73,6 +83,7 @@ if st.button("Run Analysis") and file_to_analyze:
             if os.path.exists(report_path):
                 with open(report_path, 'r') as f:
                     report_data = json.load(f)
+                st.session_state.report_data = report_data  # Store in session state
                 report_loaded = True
                 st.success("Analysis complete and report loaded!")
             else:
@@ -83,7 +94,53 @@ if st.button("Run Analysis") and file_to_analyze:
 elif not file_to_analyze:
     st.info("Please select or upload a PCAP file to analyze.")
 
-# --- Display Statistics from loaded report --- #
+if st.session_state.report_data:  # Use session state data instead of local variable
+    st.sidebar.markdown("---")
+    st.sidebar.header("📄 Generate Report")
+    
+    def generate_pdf_report():
+        try:
+            os.makedirs('output/pdf_reports', exist_ok=True)
+            
+            # Generate PDF report
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            pdf_filename = f"analysis_report_{timestamp}.pdf"
+            pdf_path = os.path.join('output/pdf_reports', pdf_filename)
+            
+            with st.spinner('Generating PDF report...'):
+                create_pdf_report(st.session_state.report_data, pdf_path)
+                
+                # Read the generated PDF
+                with open(pdf_path, "rb") as f:
+                    pdf_bytes = f.read()
+                
+                # Store in session state
+                st.session_state.pdf_generated = True
+                st.session_state.pdf_bytes = pdf_bytes
+                st.session_state.pdf_filename = pdf_filename
+            
+            return True
+        except Exception as e:
+            st.error(f"Error generating PDF report: {e}")
+            st.session_state.pdf_generated = False
+            st.session_state.pdf_bytes = None
+            st.session_state.pdf_filename = None
+            return False
+
+    # Generate PDF button with callback
+    if st.sidebar.button("Generate PDF Report", key="generate_pdf"):
+        if generate_pdf_report():
+            st.sidebar.success("PDF report generated successfully!")
+    #if generated, show download button
+    if st.session_state.pdf_generated and st.session_state.pdf_bytes:
+        st.sidebar.download_button(
+            label="Download PDF Report",
+            data=st.session_state.pdf_bytes,
+            file_name=st.session_state.pdf_filename,
+            mime="application/pdf",
+            key="download_pdf"
+        )
+
 if report_loaded:
     total_packets = report_data.get('total_packets', 0)
     tcp_retransmissions_count = len([err for err in report_data.get('errors', []) if err['type'] == 'TCP Retransmission'])
@@ -157,9 +214,9 @@ if report_loaded:
     st.header("⏱️ Latency Analysis")
     if report_data.get('latencies'):
         for i, lat in enumerate(report_data['latencies']):
-            with st.container(border=True): # Use st.container to create a visual card
+            with st.container(border=True):
                 session_key = lat['session']
-                # Format session key for better readability
+                
                 formatted_session = f"{session_key[0]}:{session_key[1]} -> {session_key[2]}:{session_key[3]}"
                 st.markdown(f"**Session {i+1}:** {formatted_session}")
                 st.markdown(f"**Latency:** {lat['latency_ms']:.2f} ms")
